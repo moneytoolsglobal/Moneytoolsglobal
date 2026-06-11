@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoneyTools Global</title>
+<meta name="description" content="Fast global money calculators for discount, profit, margin, currency conversion, and affiliate commission.">
+<style>
+:root{
+  --bg:#07111f;--card:#101b2d;--soft:#0b1525;--text:#f8fafc;--muted:#9fb0c8;
+  --line:#253955;--green:#22c55e;--cyan:#12c2e9;--blue:#2f80ed;--warn:#f59e0b;
+  --shadow:0 14px 36px rgba(0,0,0,.3)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top left,rgba(47,128,237,.16),transparent 32%),radial-gradient(circle at top right,rgba(18,194,233,.1),transparent 32%),var(--bg);color:var(--text);line-height:1.45}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.wrap{max-width:980px;margin:auto;padding:14px}
+header{position:sticky;top:0;z-index:40;background:rgba(7,17,31,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;font-weight:950}
+.brand strong{font-size:23px;letter-spacing:-.04em}.brand span{display:block;color:var(--green);font-size:12px;font-weight:900;margin-top:-4px}
+select,input,.btn{border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:14px;padding:12px;outline:none}
+select{min-width:135px}
+input{width:100%;font-size:20px}
+input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(47,128,237,.16)}
+.hero{padding:22px 0 14px}
+.hero h1{font-size:clamp(30px,7vw,52px);line-height:1.02;margin:0 0 10px;letter-spacing:-.055em}
+.lead{color:var(--muted);font-size:16px;max-width:680px;margin:0}
+.status{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.pill{border:1px solid var(--line);background:var(--soft);color:var(--muted);border-radius:999px;padding:6px 10px;font-size:13px;font-weight:850}
+.ok{color:var(--green)}.warn{color:var(--warn)}
+.tabs{display:flex;gap:8px;overflow-x:auto;margin:12px -14px 14px;padding:8px 14px;position:sticky;top:73px;z-index:35;background:rgba(7,17,31,.96);scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:14px;padding:11px 13px;font-weight:950;white-space:nowrap;min-width:max-content}
+.tab.active{border-color:var(--green);background:linear-gradient(135deg,rgba(34,197,94,.16),rgba(18,194,233,.12))}
+.panel{display:none}
+.panel.active{display:block}
+.tool{border:1px solid var(--line);background:var(--card);border-radius:22px;padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.tool:before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green))}
+.tool-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.icon{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(18,194,233,.12));display:grid;place-items:center;font-size:23px}
+.tool h2{margin:0;font-size:27px;letter-spacing:-.04em}
+.tool p{margin:2px 0 0;color:var(--muted);font-size:15px}
+.form{border:1px solid var(--line);background:rgba(8,19,33,.55);border-radius:18px;padding:14px}
+label{display:block;font-weight:950;font-size:14px;margin:8px 0 6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{color:var(--muted);font-size:12px;margin-top:5px}
+.result{margin-top:12px;border:1px solid var(--green);border-radius:18px;padding:14px;background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(18,194,233,.07))}
+.result-label{color:var(--green);font-size:13px;font-weight:950;letter-spacing:.05em;margin-bottom:6px}
+.big{font-size:clamp(31px,7vw,48px);font-weight:950;letter-spacing:-.055em;word-break:break-word}
+.subline{color:var(--muted);font-size:15px;margin-top:6px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{border:1px solid var(--line);background:rgba(7,17,31,.45);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:14px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.btn{font-weight:950}
+.primary{border:0;background:linear-gradient(135deg,var(--green),var(--cyan));color:#062016}
+.advanced{display:none}
+.advanced.show{display:block}
+details,.about,.faq{margin-top:12px;color:var(--muted)}
+summary{cursor:pointer;font-weight:900;color:var(--text)}
+.note{font-size:13px;color:var(--muted);margin-top:10px}
+.card{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:14px;margin-top:14px}
+.card h3{margin:0 0 8px}
+.faq details{border-top:1px solid var(--line);padding:10px 0;margin:0}
+footer{color:var(--muted);font-size:13px;padding:22px 0}
+@media(max-width:620px){
+  .row{grid-template-columns:1fr}
+  .brand strong{font-size:21px}
+  .brand span{display:none}
+  select{min-width:124px}
+}
+
+/* === Premium polish layer: keeps the same layout, improves visual identity === */
+:root{
+  --bg:#050d1a;
+  --card:#0d1a2d;
+  --soft:#091527;
+  --line:#294263;
+  --green:#2eea8f;
+  --cyan:#18d5ff;
+  --blue:#4f8cff;
+  --purple:#8b5cf6;
+  --shadow:0 22px 60px rgba(0,0,0,.38);
+}
+body{
+  background:
+    radial-gradient(circle at 10% 0%,rgba(79,140,255,.23),transparent 30%),
+    radial-gradient(circle at 90% 8%,rgba(46,234,143,.14),transparent 28%),
+    radial-gradient(circle at 50% 55%,rgba(139,92,246,.10),transparent 36%),
+    linear-gradient(180deg,#061021 0%,#050d1a 100%);
+}
+header{
+  box-shadow:0 10px 34px rgba(0,0,0,.22);
+}
+.logo{
+  box-shadow:0 0 0 4px rgba(24,213,255,.08),0 14px 28px rgba(24,213,255,.18);
+}
+.brand strong{
+  background:linear-gradient(135deg,#fff,#bceeff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.hero{
+  position:relative;
+  padding:34px 0 20px;
+  border:1px solid rgba(41,66,99,.55);
+  background:
+    linear-gradient(135deg,rgba(79,140,255,.14),rgba(46,234,143,.07)),
+    rgba(13,26,45,.45);
+  border-radius:28px;
+  padding:26px;
+  margin-top:18px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.hero:before{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-80px;
+  top:-80px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(24,213,255,.22),transparent 70%);
+  pointer-events:none;
+}
+.hero h1{
+  max-width:780px;
+  background:linear-gradient(135deg,#fff 12%,#d8f7ff 45%,#88f7c1 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.lead{
+  max-width:760px;
+}
+.status .pill{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.tabs{
+  padding-top:10px;
+  padding-bottom:10px;
+  mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);
+}
+.tab{
+  transition:.18s ease;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.tab:hover{
+  transform:translateY(-1px);
+  border-color:rgba(24,213,255,.7);
+}
+.tab.active{
+  color:#061021;
+  border-color:transparent;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  box-shadow:0 10px 28px rgba(24,213,255,.16),0 8px 18px rgba(46,234,143,.12);
+}
+.tool{
+  border-color:rgba(41,66,99,.86);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0)),
+    var(--card);
+}
+.tool:after{
+  content:"";
+  position:absolute;
+  inset:auto -40px -70px auto;
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(46,234,143,.08),transparent 70%);
+  pointer-events:none;
+}
+.icon{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 14px 28px rgba(24,213,255,.08);
+}
+.form{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0)),
+    rgba(8,19,33,.62);
+}
+.result{
+  border-color:rgba(46,234,143,.55);
+  background:
+    radial-gradient(circle at top left,rgba(46,234,143,.18),transparent 38%),
+    linear-gradient(135deg,rgba(46,234,143,.12),rgba(24,213,255,.08));
+  box-shadow:0 18px 42px rgba(46,234,143,.08);
+}
+.result-label{
+  display:inline-flex;
+  padding:5px 9px;
+  border:1px solid rgba(46,234,143,.26);
+  border-radius:999px;
+  background:rgba(46,234,143,.08);
+}
+.big{
+  margin-top:8px;
+  text-shadow:0 0 24px rgba(24,213,255,.10);
+}
+.chip{
+  background:rgba(5,13,26,.62);
+  border-color:rgba(41,66,99,.8);
+}
+.primary{
+  color:#04160d;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  box-shadow:0 12px 24px rgba(46,234,143,.12);
+}
+.btn{
+  transition:.18s ease;
+}
+.btn:hover{
+  transform:translateY(-1px);
+  border-color:rgba(24,213,255,.65);
+}
+.card{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0)),
+    var(--card);
+  box-shadow:var(--shadow);
+}
+.card h3{
+  color:#eafcff;
+}
+input,select{
+  transition:.18s ease;
+}
+input::placeholder{
+  color:rgba(159,176,200,.58);
+}
+@media(max-width:620px){
+  .hero{
+    border-radius:22px;
+    padding:22px 18px;
+  }
+  .hero h1{
+    font-size:clamp(34px,10vw,48px);
+  }
+  .tabs{
+    top:72px;
+  }
+}
+
+.hero-mini{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+.hero-mini span{
+  border:1px solid rgba(41,66,99,.8);
+  background:rgba(9,21,39,.72);
+  color:var(--muted);
+  border-radius:999px;
+  padding:8px 11px;
+  font-size:13px;
+  font-weight:850;
+}
+
+
+/* === FINAL FIX: no horizontal scroll for tool menu === */
+.tabs{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:10px !important;
+  overflow:visible !important;
+  margin:14px 0 16px !important;
+  padding:0 !important;
+  position:relative !important;
+  top:auto !important;
+  z-index:1 !important;
+  background:transparent !important;
+  mask-image:none !important;
+}
+.tab{
+  width:100% !important;
+  min-width:0 !important;
+  white-space:normal !important;
+  min-height:58px !important;
+  padding:13px 10px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+}
+.tab:last-child:nth-child(odd){
+  grid-column:1 / -1;
+}
+@media(min-width:760px){
+  .tabs{
+    grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  }
+  .tab:last-child:nth-child(odd){
+    grid-column:auto;
+  }
+}
+
+
+/* === MoneyTools identity layer === */
+.identity-chips span{
+  color:#dffcff;
+  border-color:rgba(46,234,143,.28);
+  background:linear-gradient(135deg,rgba(46,234,143,.11),rgba(24,213,255,.07));
+}
+.smart-note{
+  margin-top:12px;
+  border:1px solid rgba(46,234,143,.22);
+  background:linear-gradient(135deg,rgba(46,234,143,.08),rgba(24,213,255,.045));
+  border-radius:16px;
+  padding:11px 12px;
+  color:var(--muted);
+  font-size:13px;
+}
+.smart-note strong{
+  display:block;
+  color:#dffcff;
+  margin-bottom:4px;
+  font-size:13px;
+  letter-spacing:.02em;
+}
+.smart-note span{
+  display:block;
+}
+.brand span{
+  color:var(--green);
+}
+
+
+.picker-title{
+  color:#dffcff;
+  font-weight:950;
+  margin:16px 2px 8px;
+  letter-spacing:-.02em;
+}
+
+
+/* Contextual hints: softer so they guide without making the form feel crowded */
+.hint{
+  opacity:.82;
+  font-size:12.5px;
+  line-height:1.35;
+}
+.picker-title{
+  font-size:15px;
+  color:#dffcff;
+}
+
+
+/* === Final publish polish === */
+.identity-chips span{font-size:13px}
+.hint{opacity:.72;font-size:12px;line-height:1.35}
+.tabs{mask-image:none !important}
+.tab{min-height:56px}
+.smart-note{padding:10px 12px}
+.smart-note strong{font-size:12px}
+.card p{margin-bottom:0}
+@media(max-width:620px){
+  .hero-mini{gap:7px}
+  .hero-mini span{padding:7px 9px;font-size:12px}
+}
+
+
+
+/* Publish-ready sections */
+.legal p{margin:0;color:var(--muted)}
+.footer-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+.footer-links a{color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(159,176,200,.35)}
+.footer-links a:hover{color:var(--text)}
+
+
+.contact-email{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:12px;
+  padding:12px 14px;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  color:#04160d;
+  font-weight:950;
+  text-decoration:none;
+  box-shadow:0 12px 24px rgba(46,234,143,.12);
+  word-break:break-word;
+}
+.contact-email:hover{
+  transform:translateY(-1px);
+}
+
+</style>
+
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#07111f">
+<meta property="og:title" content="MoneyTools - Simple tools for everyday money">
+<meta property="og:description" content="Calculate discount, profit, margin, currency, and affiliate commission in a clear way.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "MoneyTools",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "description": "Simple calculators for discount, profit, margin, currency, and affiliate commission."
+}
+</script>
+
+</head>
+<body>
+<header><div class="wrap nav"><div class="brand"><div class="logo">MT</div><div><strong>MoneyTools</strong><span>Global</span></div></div><select id="lang"><option value="en">English</option><option value="id">Indonesia</option><option value="pt">Português</option><option value="es">Español</option></select></div></header>
+<main class="wrap">
+<section class="hero">
+<h1 data-i18n="title"></h1>
+<p class="lead" data-i18n="lead"></p>
+
+<div class="hero-mini identity-chips">
+  <span data-i18n="chipPrice"></span>
+  <span data-i18n="chipProfit"></span>
+  <span data-i18n="chipDecide"></span>
+</div>
+<div class="status" id="status"></div>
+</section>
+
+<div class="picker-title" data-i18n="chooseTool"></div>
+<nav class="tabs">
+<button class="tab active" data-panel="discount">🏷️ <span data-i18n="navDiscount"></span></button>
+<button class="tab" data-panel="profit">📈 <span data-i18n="navProfit"></span></button>
+<button class="tab" data-panel="margin">📊 <span data-i18n="navMargin"></span></button>
+<button class="tab" data-panel="currency">💱 <span data-i18n="navCurrency"></span></button>
+<button class="tab" data-panel="affiliate">🤝 <span data-i18n="navAffiliate"></span></button>
+</nav>
+
+<section class="panel active" id="discount">
+<div class="tool">
+<div class="tool-head"><div class="icon">🏷️</div><div><h2 data-i18n="discountTitle"></h2><p data-i18n="discountText"></p></div></div>
+<div class="form">
+<label data-i18n="currency"></label><select id="discCur"></select>
+<label data-i18n="originalPrice"></label><input id="discPrice" value="100000" inputmode="decimal"><div class="hint" data-i18n="moneyHint"></div>
+<label data-i18n="discount"></label><input id="discPct" value="30" inputmode="decimal"><div class="hint" data-i18n="percentHint"></div>
+</div>
+<div class="result"><div class="result-label" data-i18n="result"></div><div class="big" id="discMain"></div><div class="subline" id="discSub"></div><div class="chips"><span class="chip" id="discChip1"></span><span class="chip" id="discChip2"></span></div><div class="advanced" id="discAdv"><div class="chips"><span class="chip" id="discAdv1"></span><span class="chip" id="discAdv2"></span></div></div><div class="actions"><button class="btn primary" data-copy="discMain" data-i18n="copy"></button><button class="btn" data-advanced="discAdv" data-i18n="advanced"></button><button class="btn" data-reset="discount" data-i18n="reset"></button></div></div>
+<details><summary data-i18n="explainResult"></summary><div class="note" id="discExplain"></div></details>
+<div class="smart-note"><strong data-i18n="smartNote"></strong><span id="discSmart"></span></div>
+</div>
+</section>
+
+<section class="panel" id="profit">
+<div class="tool">
+<div class="tool-head"><div class="icon">📈</div><div><h2 data-i18n="profitTitle"></h2><p data-i18n="profitText"></p></div></div>
+<div class="form">
+<label data-i18n="currency"></label><select id="profitCur"></select>
+<div class="row"><div><label data-i18n="cost"></label><input id="profitCost" value="10000" inputmode="decimal"><div class="hint" data-i18n="moneyHint"></div></div><div><label data-i18n="sell"></label><input id="profitSell" value="15000" inputmode="decimal"><div class="hint" data-i18n="moneyHint"></div></div></div><label data-i18n="qty"></label><input id="profitQty" value="1" inputmode="decimal"><div class="hint" data-i18n="qtyHint"></div>
+</div>
+<div class="result"><div class="result-label" data-i18n="result"></div><div class="big" id="profitMain"></div><div class="subline" id="profitSub"></div><div class="chips"><span class="chip" id="profitChip1"></span><span class="chip" id="profitChip2"></span></div><div class="advanced" id="profitAdv"><div class="chips"><span class="chip" id="profitAdv1"></span><span class="chip" id="profitAdv2"></span><span class="chip" id="profitAdv3"></span></div></div><div class="actions"><button class="btn primary" data-copy="profitMain" data-i18n="copy"></button><button class="btn" data-advanced="profitAdv" data-i18n="advanced"></button><button class="btn" data-reset="profit" data-i18n="reset"></button></div></div>
+<details><summary data-i18n="explainResult"></summary><div class="note" id="profitExplain"></div></details>
+<div class="smart-note"><strong data-i18n="smartNote"></strong><span id="profitSmart"></span></div>
+</div>
+</section>
+
+<section class="panel" id="margin">
+<div class="tool">
+<div class="tool-head"><div class="icon">📊</div><div><h2 data-i18n="marginTitle"></h2><p data-i18n="marginText"></p></div></div>
+<div class="form"><label data-i18n="currency"></label><select id="marginCur"></select><div class="row"><div><label data-i18n="cost"></label><input id="marginCost" value="100000" inputmode="decimal"><div class="hint" data-i18n="moneyHint"></div></div><div><label data-i18n="sell"></label><input id="marginSell" value="150000" inputmode="decimal"><div class="hint" data-i18n="moneyHint"></div></div></div></div>
+<div class="result"><div class="result-label" data-i18n="result"></div><div class="big" id="marginMain"></div><div class="subline" id="marginSub"></div><div class="chips"><span class="chip" id="marginChip1"></span><span class="chip" id="marginChip2"></span></div><div class="advanced" id="marginAdv"><div class="chips"><span class="chip" id="marginAdv1"></span><span class="chip" id="marginAdv2"></span></div></div><div class="actions"><button class="btn primary" data-copy="marginMain" data-i18n="copy"></button><button class="btn" data-advanced="marginAdv" data-i18n="advanced"></button><button class="btn" data-reset="margin" data-i18n="reset"></button></div></div>
+<details><summary data-i18n="explainResult"></summary><div class="note" id="marginExplain"></div></details>
+<div class="smart-note"><strong data-i18n="smartNote"></strong><span id="marginSmart"></span></div>
+</div>
+</section>
+
+<section class="panel" id="currency">
+<div class="tool">
+<div class="tool-head"><div class="icon">💱</div><div><h2 data-i18n="currencyTitle"></h2><p data-i18n="currencyText"></p></div></div>
+<div class="form"><label data-i18n="amount"></label><input id="curAmount" value="100" inputmode="decimal"><div class="hint" data-i18n="moneyHint"></div><div class="row"><div><label data-i18n="from"></label><select id="curFrom"></select></div><div><label data-i18n="to"></label><select id="curTo"></select></div></div></div>
+<div class="result"><div class="result-label" data-i18n="result"></div><div class="big" id="curMain"></div><div class="subline" id="curSub"></div><div class="chips"><span class="chip" id="curChip1"></span><span class="chip" id="curChip2"></span></div><div class="actions"><button class="btn primary" data-copy="curMain" data-i18n="copy"></button><button class="btn" id="swapCurrency" data-i18n="swap"></button><button class="btn" id="refresh" data-i18n="refreshShort"></button></div></div>
+<details><summary data-i18n="explainResult"></summary><div class="note" id="curExplain"></div></details>
+<div class="smart-note"><strong data-i18n="smartNote"></strong><span id="curSmart"></span></div>
+</div>
+</section>
+
+<section class="panel" id="affiliate">
+<div class="tool">
+<div class="tool-head"><div class="icon">🤝</div><div><h2 data-i18n="affiliateTitle"></h2><p data-i18n="affiliateText"></p></div></div>
+<div class="form"><label data-i18n="currency"></label><select id="affCur"></select><div class="row"><div><label data-i18n="productPrice"></label><input id="affPrice" value="100" inputmode="decimal"><div class="hint" data-i18n="moneyHint"></div></div><div><label data-i18n="commissionRate"></label><input id="affPct" value="20" inputmode="decimal"><div class="hint" data-i18n="percentHint"></div></div></div><label data-i18n="salesCount"></label><input id="affSales" value="15" inputmode="decimal"><div class="hint" data-i18n="qtyHint"></div></div>
+<div class="result"><div class="result-label" data-i18n="result"></div><div class="big" id="affMain"></div><div class="subline" id="affSub"></div><div class="chips"><span class="chip" id="affChip1"></span><span class="chip" id="affChip2"></span></div><div class="advanced" id="affAdv"><div class="chips"><span class="chip" id="affAdv1"></span><span class="chip" id="affAdv2"></span></div></div><div class="actions"><button class="btn primary" data-copy="affMain" data-i18n="copy"></button><button class="btn" data-advanced="affAdv" data-i18n="advanced"></button><button class="btn" data-reset="affiliate" data-i18n="reset"></button></div></div>
+<details><summary data-i18n="explainResult"></summary><div class="note" id="affExplain"></div></details>
+<div class="smart-note"><strong data-i18n="smartNote"></strong><span id="affSmart"></span></div>
+</div>
+</section>
+
+<section class="about card">
+<h3 data-i18n="aboutTitle"></h3>
+<p data-i18n="aboutText"></p>
+</section>
+
+<section class="faq card">
+<h3>FAQ</h3>
+<details><summary data-i18n="faqProfitQ"></summary><p data-i18n="faqProfitA"></p></details>
+<details><summary data-i18n="faqMarginQ"></summary><p data-i18n="faqMarginA"></p></details>
+<details><summary data-i18n="faqRateQ"></summary><p data-i18n="faqRateA"></p></details>
+</section>
+
+<section class="card legal" id="privacy">
+  <h3 data-i18n="privacyTitle"></h3>
+  <p data-i18n="privacyText"></p>
+</section>
+
+<section class="card legal" id="terms">
+  <h3 data-i18n="termsTitle"></h3>
+  <p data-i18n="termsText"></p>
+</section>
+
+
+<section class="card legal" id="contact">
+  <h3 data-i18n="contactTitle"></h3>
+  <p data-i18n="contactText"></p>
+  <a class="contact-email" href="mailto:moneytoolsglobal@gmail.com?subject=MoneyTools%20Feedback">moneytoolsglobal@gmail.com</a>
+</section>
+
+
+</main>
+<footer><div class="wrap"><div data-i18n="footer"></div>
+<div class="footer-links">
+  <a href="#privacy" data-i18n="privacyTitle"></a>
+  <a href="#terms" data-i18n="termsTitle"></a>
+  <a href="#contact" data-i18n="contactTitle"></a>
+</div>
+</div></footer>
+<script>
+const T={
+en:{title:"Simple tools for everyday money.",lead:"Calculate prices, profit, margin, currency, and commission in a clear way.",chooseTool:"Choose what you want to calculate",chipPrice:"Easy pricing",chipProfit:"Clear profit",chipDecide:"Simple conversion",navDiscount:"Discount",navProfit:"Profit",navMargin:"Margin",navCurrency:"Currency",navAffiliate:"Affiliate",currency:"Currency",discountTitle:"Discount Calculator",discountText:"See what you pay and what you save.",originalPrice:"Original price",discount:"Discount (%)",moneyHint:"Example: 100000 or 100,000.",percentHint:"Example: 30 for 30%.",qtyHint:"Example: 1, 10, or 25.",numberHint:"Example: 100000 or 100,000.",result:"SUMMARY",copy:"Copy",reset:"Reset",advanced:"Detail",hideAdvanced:"Hide detail",explainResult:"Explain result",smartNote:"Smart Note",profitTitle:"Profit Calculator",profitText:"See profit, ROI, margin, and revenue.",cost:"Cost",sell:"Sell price",qty:"Quantity",marginTitle:"Margin Calculator",marginText:"See margin, markup, and profit.",currencyTitle:"Currency Converter",currencyText:"Convert money between global currencies.",amount:"Amount",from:"From",to:"To",swap:"Swap",refreshShort:"Refresh",affiliateTitle:"Affiliate Commission",affiliateText:"Estimate commission from sales.",productPrice:"Product price",commissionRate:"Commission (%)",salesCount:"Sales count",footer:"MoneyTools is for quick estimates. Final prices may differ by bank, wallet, marketplace, or exchange.",privacyTitle:"Privacy Policy",privacyText:"MoneyTools does not require login and does not ask for personal financial information. Calculations happen in your browser. Currency rates may be loaded from a public exchange-rate service.",termsTitle:"Terms & Disclaimer",termsText:"MoneyTools is provided for simple estimates only. Results are not financial advice. Always check final prices, fees, and exchange rates with your bank, wallet, marketplace, or exchange.",contactTitle:"Contact",contactText:"For questions, feedback, or improvement ideas, send an email to:",live:"Live rates loaded",fallback:"Using saved/fallback rates",updated:"Updated",rateNote:"Estimate only",rateUnavailable:"Rate not available",aboutTitle:"About MoneyTools",aboutText:"MoneyTools helps people calculate everyday money needs in a simple way. Use it for quick estimates when checking prices, profit, margin, currency value, or commission.",faqProfitQ:"What is profit?",faqProfitA:"Profit is the money left after subtracting your cost from your selling price.",faqMarginQ:"What is margin?",faqMarginA:"Margin is profit as a percentage of the selling price. It helps you understand how much of the sale is profit.",faqRateQ:"Why can exchange rates differ?",faqRateA:"Banks, wallets, and exchanges may add fees or use different rates, so live rates are estimates.",save:"You save {saved}. You pay {final}.",profit:"You earn {profit} after selling.",loss:"You lose {profit} after selling.",profitExplain:"You spent {cost} and earned {revenue}. Your net profit is {profit}. ROI means profit compared to cost. Margin means profit compared to selling price.",marginExplain:"Your margin is {margin}%. This means {margin}% of the selling price is profit. Markup is {markup}% compared to cost.",currencyExplain:"{amount} {from} equals about {result} {to}. Rates are estimates.",affiliateExplain:"Each sale gives {perSale}. Total commission is {total} from {sales} sales.",discSmart:"Discounts can make prices easier to compare and understand.",profitSmartPos:"Small profit can still be useful when sales happen often.",profitSmartNeg:"This price creates a loss. Increase the selling price or reduce your cost.",marginSmart:"Margin helps you see how much of the selling price becomes profit.",currencySmart:"Rates may differ between banks, wallets, and exchanges.",noRateSmart:"If a rate is unavailable, the result is not shown to avoid a wrong number.",affiliateSmart:"Commission may look small per sale, but it can grow when sales are consistent."},
+id:{title:"Alat sederhana untuk uang sehari-hari.",lead:"Hitung harga, untung, margin, mata uang, dan komisi dengan cara yang jelas.",chooseTool:"Pilih yang ingin Anda hitung",chipPrice:"Harga lebih mudah",chipProfit:"Untung lebih jelas",chipDecide:"Konversi sederhana",navDiscount:"Diskon",navProfit:"Untung",navMargin:"Margin",navCurrency:"Mata Uang",navAffiliate:"Affiliate",currency:"Mata uang",discountTitle:"Kalkulator Diskon",discountText:"Lihat berapa yang dibayar dan dihemat.",originalPrice:"Harga asli",discount:"Diskon (%)",moneyHint:"Contoh: 100000 atau 100.000.",percentHint:"Contoh: 30 untuk 30%.",qtyHint:"Contoh: 1, 10, atau 25.",numberHint:"Contoh: 100000 atau 100.000.",result:"RINGKASAN",copy:"Salin",reset:"Reset",advanced:"Detail",hideAdvanced:"Sembunyikan detail",explainResult:"Jelaskan hasil",smartNote:"Catatan Pintar",profitTitle:"Kalkulator Untung",profitText:"Lihat untung, ROI, margin, dan pendapatan.",cost:"Modal",sell:"Harga jual",qty:"Jumlah",marginTitle:"Kalkulator Margin",marginText:"Lihat margin, markup, dan untung.",currencyTitle:"Konverter Mata Uang",currencyText:"Konversi uang antar mata uang global.",amount:"Jumlah",from:"Dari",to:"Ke",swap:"Tukar",refreshShort:"Refresh",affiliateTitle:"Komisi Affiliate",affiliateText:"Estimasi komisi dari penjualan.",productPrice:"Harga produk",commissionRate:"Komisi (%)",salesCount:"Jumlah penjualan",footer:"MoneyTools digunakan untuk estimasi cepat. Harga akhir bisa berbeda tergantung bank, wallet, marketplace, atau exchange.",privacyTitle:"Kebijakan Privasi",privacyText:"MoneyTools tidak membutuhkan login dan tidak meminta informasi keuangan pribadi. Perhitungan dilakukan di browser Anda. Kurs mata uang dapat dimuat dari layanan kurs publik.",termsTitle:"Ketentuan & Disclaimer",termsText:"MoneyTools disediakan hanya untuk estimasi sederhana. Hasil bukan nasihat keuangan. Selalu cek harga akhir, biaya, dan kurs di bank, wallet, marketplace, atau exchange Anda.",contactTitle:"Kontak",contactText:"Untuk pertanyaan, masukan, atau ide perbaikan, kirim email ke:",live:"Kurs live berhasil dimuat",fallback:"Memakai kurs tersimpan/cadangan",updated:"Diperbarui",rateNote:"Hanya estimasi",rateUnavailable:"Kurs tidak tersedia",aboutTitle:"Tentang MoneyTools",aboutText:"MoneyTools membantu menghitung kebutuhan uang sehari-hari dengan cara sederhana. Gunakan untuk estimasi cepat saat mengecek harga, untung, margin, nilai mata uang, atau komisi.",faqProfitQ:"Apa itu keuntungan?",faqProfitA:"Keuntungan adalah uang yang tersisa setelah modal dikurangi dari harga jual.",faqMarginQ:"Apa itu margin?",faqMarginA:"Margin adalah keuntungan dalam bentuk persentase dari harga jual. Ini membantu memahami berapa bagian penjualan yang menjadi untung.",faqRateQ:"Mengapa kurs bisa berbeda?",faqRateA:"Bank, wallet, dan exchange bisa menambahkan biaya atau memakai kurs berbeda, jadi kurs live adalah estimasi.",save:"Anda hemat {saved}. Anda membayar {final}.",profit:"Anda mendapat untung {profit} setelah menjual.",loss:"Anda rugi {profit} setelah menjual.",profitExplain:"Anda mengeluarkan {cost} dan mendapatkan pendapatan {revenue}. Untung bersih Anda {profit}. ROI membandingkan untung dengan modal. Margin membandingkan untung dengan harga jual.",marginExplain:"Margin Anda {margin}%. Artinya {margin}% dari harga jual adalah untung. Markup adalah {markup}% dibanding modal.",currencyExplain:"{amount} {from} sekitar {result} {to}. Kurs hanya estimasi.",affiliateExplain:"Setiap penjualan memberi {perSale}. Total komisi {total} dari {sales} penjualan.",discSmart:"Diskon membantu harga terlihat lebih mudah dibandingkan.",profitSmartPos:"Untung kecil tetap bisa berguna jika penjualan terjadi sering.",profitSmartNeg:"Harga ini menghasilkan rugi. Naikkan harga jual atau turunkan modal.",marginSmart:"Margin membantu melihat berapa bagian harga jual yang menjadi untung.",currencySmart:"Kurs bisa berbeda di bank, wallet, atau exchange.",noRateSmart:"Jika kurs tidak tersedia, hasil tidak ditampilkan agar tidak memberi angka yang salah.",affiliateSmart:"Komisi terlihat kecil per penjualan, tapi bisa besar jika penjualan konsisten."},
+pt:{title:"Ferramentas simples para o dinheiro do dia a dia.",lead:"Calcule preço, lucro, margem, câmbio e comissão de forma clara.",chooseTool:"Escolha o que você quer calcular",chipPrice:"Preço mais fácil",chipProfit:"Lucro mais claro",chipDecide:"Conversão simples",navDiscount:"Desconto",navProfit:"Lucro",navMargin:"Margem",navCurrency:"Moeda",navAffiliate:"Afiliado",currency:"Moeda",discountTitle:"Calculadora de Desconto",discountText:"Veja quanto você paga e quanto economiza.",originalPrice:"Preço original",discount:"Desconto (%)",moneyHint:"Exemplo: 100000 ou 100.000.",percentHint:"Exemplo: 30 para 30%.",qtyHint:"Exemplo: 1, 10 ou 25.",numberHint:"Exemplo: 100000 ou 100.000.",result:"RESUMO",copy:"Copiar",reset:"Resetar",advanced:"Detalhes",hideAdvanced:"Ocultar detalhes",explainResult:"Explicar resultado",smartNote:"Nota útil",profitTitle:"Calculadora de Lucro",profitText:"Veja lucro, ROI, margem e receita.",cost:"Custo",sell:"Preço de venda",qty:"Quantidade",marginTitle:"Calculadora de Margem",marginText:"Veja margem, markup e lucro.",currencyTitle:"Conversor de Moedas",currencyText:"Converta dinheiro entre moedas globais.",amount:"Valor",from:"De",to:"Para",swap:"Trocar",refreshShort:"Atualizar",affiliateTitle:"Comissão de Afiliado",affiliateText:"Estime a comissão das vendas.",productPrice:"Preço do produto",commissionRate:"Comissão (%)",salesCount:"Número de vendas",footer:"MoneyTools é para estimativas rápidas. O preço final pode variar por banco, carteira, marketplace ou exchange.",privacyTitle:"Política de Privacidade",privacyText:"MoneyTools não exige login e não pede informações financeiras pessoais. Os cálculos acontecem no seu navegador. As cotações podem ser carregadas de um serviço público de câmbio.",termsTitle:"Termos & Aviso",termsText:"MoneyTools é fornecido apenas para estimativas simples. Os resultados não são aconselhamento financeiro. Sempre confirme preços finais, taxas e cotações com seu banco, carteira, marketplace ou exchange.",contactTitle:"Contato",contactText:"Para dúvidas, feedback ou ideias de melhoria, envie um e-mail para:",live:"Cotações ao vivo carregadas",fallback:"Usando cotações salvas/reserva",updated:"Atualizado",rateNote:"Apenas estimativa",rateUnavailable:"Cotação indisponível",aboutTitle:"Sobre MoneyTools",aboutText:"MoneyTools ajuda a calcular necessidades de dinheiro do dia a dia de forma simples. Use para estimativas rápidas de preço, lucro, margem, câmbio ou comissão.",faqProfitQ:"O que é lucro?",faqProfitA:"Lucro é o dinheiro que sobra depois de subtrair o custo do preço de venda.",faqMarginQ:"O que é margem?",faqMarginA:"Margem é o lucro como porcentagem do preço de venda. Ela ajuda a entender quanto da venda vira lucro.",faqRateQ:"Por que as cotações podem variar?",faqRateA:"Bancos, carteiras e exchanges podem adicionar taxas ou usar cotações diferentes, então os valores são estimativas.",save:"Você economiza {saved}. Você paga {final}.",profit:"Você ganha {profit} após vender.",loss:"Você perde {profit} após vender.",profitExplain:"Você gastou {cost} e recebeu {revenue}. Seu lucro líquido é {profit}. ROI compara lucro com custo. Margem compara lucro com preço de venda.",marginExplain:"Sua margem é {margin}%. Isso significa que {margin}% do preço de venda é lucro. Markup é {markup}% em relação ao custo.",currencyExplain:"{amount} {from} equivale a cerca de {result} {to}. As cotações são estimativas.",affiliateExplain:"Cada venda gera {perSale}. A comissão total é {total} em {sales} vendas.",discSmart:"Descontos ajudam a comparar e entender preços com mais facilidade.",profitSmartPos:"Um lucro pequeno ainda pode ser útil quando as vendas são frequentes.",profitSmartNeg:"Esse preço gera prejuízo. Aumente o preço de venda ou reduza o custo.",marginSmart:"A margem ajuda a ver quanto do preço de venda vira lucro.",currencySmart:"As cotações podem variar entre bancos, carteiras e exchanges.",noRateSmart:"Se a cotação não estiver disponível, o resultado não aparece para evitar número errado.",affiliateSmart:"A comissão pode parecer pequena por venda, mas cresce com vendas consistentes."},
+es:{title:"Herramientas simples para el dinero diario.",lead:"Calcula precio, ganancia, margen, moneda y comisión de forma clara.",chooseTool:"Elige lo que quieres calcular",chipPrice:"Precio más fácil",chipProfit:"Ganancia más clara",chipDecide:"Conversión simple",navDiscount:"Descuento",navProfit:"Ganancia",navMargin:"Margen",navCurrency:"Moneda",navAffiliate:"Afiliado",currency:"Moneda",discountTitle:"Calculadora de Descuento",discountText:"Ve cuánto pagas y cuánto ahorras.",originalPrice:"Precio original",discount:"Descuento (%)",moneyHint:"Ejemplo: 100000 o 100.000.",percentHint:"Ejemplo: 30 para 30%.",qtyHint:"Ejemplo: 1, 10 o 25.",numberHint:"Ejemplo: 100000 o 100.000.",result:"RESUMEN",copy:"Copiar",reset:"Restablecer",advanced:"Detalles",hideAdvanced:"Ocultar detalles",explainResult:"Explicar resultado",smartNote:"Nota útil",profitTitle:"Calculadora de Ganancia",profitText:"Ve ganancia, ROI, margen e ingresos.",cost:"Costo",sell:"Precio de venta",qty:"Cantidad",marginTitle:"Calculadora de Margen",marginText:"Ve margen, markup y ganancia.",currencyTitle:"Conversor de Monedas",currencyText:"Convierte dinero entre monedas globales.",amount:"Monto",from:"De",to:"A",swap:"Cambiar",refreshShort:"Actualizar",affiliateTitle:"Comisión de Afiliado",affiliateText:"Estima la comisión por ventas.",productPrice:"Precio del producto",commissionRate:"Comisión (%)",salesCount:"Número de ventas",footer:"MoneyTools es para estimaciones rápidas. El precio final puede variar por banco, billetera, marketplace o exchange.",privacyTitle:"Política de Privacidad",privacyText:"MoneyTools no requiere inicio de sesión y no solicita información financiera personal. Los cálculos se realizan en tu navegador. Los tipos de cambio pueden cargarse desde un servicio público de cambio.",termsTitle:"Términos y Aviso",termsText:"MoneyTools se ofrece solo para estimaciones simples. Los resultados no son asesoramiento financiero. Siempre verifica precios finales, comisiones y tipos de cambio con tu banco, billetera, marketplace o exchange.",contactTitle:"Contacto",contactText:"Para preguntas, comentarios o ideas de mejora, envía un email a:",live:"Tipos de cambio cargados",fallback:"Usando tipos guardados/de respaldo",updated:"Actualizado",rateNote:"Solo estimación",rateUnavailable:"Tipo de cambio no disponible",aboutTitle:"Sobre MoneyTools",aboutText:"MoneyTools ayuda a calcular necesidades de dinero diario de forma simple. Úsalo para estimaciones rápidas de precio, ganancia, margen, valor de moneda o comisión.",faqProfitQ:"¿Qué es la ganancia?",faqProfitA:"La ganancia es el dinero que queda después de restar el costo al precio de venta.",faqMarginQ:"¿Qué es el margen?",faqMarginA:"El margen es la ganancia como porcentaje del precio de venta. Ayuda a entender cuánto de la venta es ganancia.",faqRateQ:"¿Por qué los tipos de cambio pueden variar?",faqRateA:"Bancos, billeteras y exchanges pueden añadir comisiones o usar tipos distintos, por eso los valores son estimaciones.",save:"Ahorras {saved}. Pagas {final}.",profit:"Ganas {profit} después de vender.",loss:"Pierdes {profit} después de vender.",profitExplain:"Gastaste {cost} y recibiste {revenue}. Tu ganancia neta es {profit}. ROI compara ganancia con costo. Margen compara ganancia con precio de venta.",marginExplain:"Tu margen es {margin}%. Esto significa que {margin}% del precio de venta es ganancia. Markup es {markup}% frente al costo.",currencyExplain:"{amount} {from} equivale aproximadamente a {result} {to}. Los tipos son estimaciones.",affiliateExplain:"Cada venta genera {perSale}. La comisión total es {total} por {sales} ventas.",discSmart:"Los descuentos ayudan a comparar y entender precios con más facilidad.",profitSmartPos:"Una ganancia pequeña aún puede ser útil cuando las ventas son frecuentes.",profitSmartNeg:"Este precio genera pérdida. Sube el precio de venta o reduce el costo.",marginSmart:"El margen ayuda a ver cuánto del precio de venta se convierte en ganancia.",currencySmart:"Los tipos de cambio pueden variar entre bancos, billeteras y exchanges.",noRateSmart:"Si el tipo no está disponible, el resultado no se muestra para evitar un número incorrecto.",affiliateSmart:"La comisión puede parecer pequeña por venta, pero crece con ventas constantes."}
+};
+const currencies={
+USD:["🇺🇸","US Dollar"],EUR:["🇪🇺","Euro"],GBP:["🇬🇧","British Pound"],JPY:["🇯🇵","Japanese Yen"],CNY:["🇨🇳","Chinese Yuan"],KRW:["🇰🇷","South Korean Won"],IDR:["🇮🇩","Indonesian Rupiah"],BRL:["🇧🇷","Brazilian Real"],INR:["🇮🇳","Indian Rupee"],PHP:["🇵🇭","Philippine Peso"],TRY:["🇹🇷","Turkish Lira"],RUB:["🇷🇺","Russian Ruble"],AED:["🇦🇪","UAE Dirham"],SAR:["🇸🇦","Saudi Riyal"],QAR:["🇶🇦","Qatari Riyal"],KWD:["🇰🇼","Kuwaiti Dinar"],CLP:["🇨🇱","Chilean Peso"],COP:["🇨🇴","Colombian Peso"],ARS:["🇦🇷","Argentine Peso"],CAD:["🇨🇦","Canadian Dollar"],AUD:["🇦🇺","Australian Dollar"],NZD:["🇳🇿","New Zealand Dollar"],SGD:["🇸🇬","Singapore Dollar"],MYR:["🇲🇾","Malaysian Ringgit"],THB:["🇹🇭","Thai Baht"],VND:["🇻🇳","Vietnamese Dong"],MXN:["🇲🇽","Mexican Peso"],CHF:["🇨🇭","Swiss Franc"],SEK:["🇸🇪","Swedish Krona"],NOK:["🇳🇴","Norwegian Krone"],DKK:["🇩🇰","Danish Krone"],PLN:["🇵🇱","Polish Zloty"],ZAR:["🇿🇦","South African Rand"],NGN:["🇳🇬","Nigerian Naira"],EGP:["🇪🇬","Egyptian Pound"],PKR:["🇵🇰","Pakistani Rupee"],BDT:["🇧🇩","Bangladeshi Taka"],HKD:["🇭🇰","Hong Kong Dollar"],TWD:["🇹🇼","New Taiwan Dollar"],ILS:["🇮🇱","Israeli Shekel"],CZK:["🇨🇿","Czech Koruna"],HUF:["🇭🇺","Hungarian Forint"],RON:["🇷🇴","Romanian Leu"],UAH:["🇺🇦","Ukrainian Hryvnia"],KES:["🇰🇪","Kenyan Shilling"],TZS:["🇹🇿","Tanzanian Shilling"],UGX:["🇺🇬","Ugandan Shilling"],GHS:["🇬🇭","Ghanaian Cedi"],MAD:["🇲🇦","Moroccan Dirham"],DZD:["🇩🇿","Algerian Dinar"],TND:["🇹🇳","Tunisian Dinar"],OMR:["🇴🇲","Omani Rial"],BHD:["🇧🇭","Bahraini Dinar"],JOD:["🇯🇴","Jordanian Dinar"],LKR:["🇱🇰","Sri Lankan Rupee"],NPR:["🇳🇵","Nepalese Rupee"],KHR:["🇰🇭","Cambodian Riel"],LAK:["🇱🇦","Lao Kip"],MMK:["🇲🇲","Myanmar Kyat"],MNT:["🇲🇳","Mongolian Tögrög"],KZT:["🇰🇿","Kazakhstani Tenge"],UZS:["🇺🇿","Uzbekistani Som"],PEN:["🇵🇪","Peruvian Sol"],UYU:["🇺🇾","Uruguayan Peso"],PYG:["🇵🇾","Paraguayan Guaraní"],BOB:["🇧🇴","Bolivian Boliviano"],CRC:["🇨🇷","Costa Rican Colón"],DOP:["🇩🇴","Dominican Peso"],JMD:["🇯🇲","Jamaican Dollar"],TTD:["🇹🇹","Trinidad and Tobago Dollar"],XOF:["🌍","West African CFA Franc"],XAF:["🌍","Central African CFA Franc"],XCD:["🌍","East Caribbean Dollar"],XPF:["🌍","CFP Franc"]
+};
+let rates={USD:1,EUR:.92,GBP:.78,JPY:156,CNY:7.2,KRW:1370,IDR:15598,BRL:5.4,INR:83,PHP:58,TRY:32,RUB:90,AED:3.67,SAR:3.75,QAR:3.64,KWD:.31,CLP:930,COP:3900,ARS:900,CAD:1.37,AUD:1.52,NZD:1.64,SGD:1.35,MYR:4.7,THB:36,VND:25400,MXN:17,CHF:.9,SEK:10.5,NOK:10.7,DKK:6.9,PLN:4,ZAR:18.5,NGN:1500,EGP:48,PKR:278,BDT:117,HKD:7.8,TWD:32,ILS:3.7,CZK:23,HUF:360,RON:4.6,UAH:40,KES:130,TZS:2600,UGX:3800,GHS:14,MAD:10,DZD:134,TND:3.1,OMR:.385,BHD:.376,JOD:.709,LKR:300,NPR:133,KHR:4100,LAK:22000,MMK:2100,MNT:3450,KZT:450,UZS:12600,PEN:3.75,UYU:39,PYG:7500,BOB:6.91,CRC:520,DOP:59,JMD:156,TTD:6.8,XOF:604,XAF:604,XCD:2.7,XPF:110};
+let updated="—";
+const $=id=>document.getElementById(id),tr=()=>T[$("lang").value]||T.en,tpl=(s,o)=>s.replace(/\{(\w+)\}/g,(_,k)=>o[k]??"");
+
+function label(k){
+  const L=document.documentElement.lang||"en";
+  const labels={
+    original:{en:"Original ",id:"Harga asli ",pt:"Preço original ",es:"Precio original "},
+    saved:{en:"Saved ",id:"Uang dihemat ",pt:"Economia ",es:"Ahorro "},
+    pay:{en:"Pay ",id:"Bayar ",pt:"Pagar ",es:"Pagar "},
+    revenue:{en:"Revenue ",id:"Pendapatan ",pt:"Receita ",es:"Ingresos "},
+    qty:{en:"Qty ",id:"Jumlah ",pt:"Qtd ",es:"Cant. "},
+    totalCost:{en:"Total cost ",id:"Modal total ",pt:"Custo total ",es:"Costo total "},
+    profit:{en:"Profit ",id:"Untung ",pt:"Lucro ",es:"Ganancia "},
+    sell:{en:"Sell ",id:"Harga jual ",pt:"Venda ",es:"Venta "},
+    cost:{en:"Cost ",id:"Modal ",pt:"Custo ",es:"Costo "},
+    perSale:{en:"Per sale ",id:"Per penjualan ",pt:"Por venda ",es:"Por venta "},
+    sales:{en:"Sales ",id:"Penjualan ",pt:"Vendas ",es:"Ventas "},
+    product:{en:"Product ",id:"Harga produk ",pt:"Produto ",es:"Producto "},
+    commission:{en:"Commission ",id:"Komisi ",pt:"Comissão ",es:"Comisión "}
+  };
+  return (labels[k]&&labels[k][L]) || (labels[k]&&labels[k].en) || "";
+}
+
+function parseNumber(v){let s=String(v||"").trim().replace(/\s/g,"");if(!s)return 0;const c=s.includes(","),d=s.includes(".");if(c&&d){if(s.lastIndexOf(",")>s.lastIndexOf("."))s=s.replace(/\./g,"").replace(",",".");else s=s.replace(/,/g,"")}else if(d){const p=s.split(".");if(p.length>1&&p[p.length-1].length===3)s=s.replace(/\./g,"")}else if(c){const p=s.split(",");if(p.length>1&&p[p.length-1].length===3)s=s.replace(/,/g,"");else s=s.replace(",",".")}return Number(s.replace(/[^\d.-]/g,""))||0}
+function num(n){return new Intl.NumberFormat(undefined,{maximumFractionDigits:2}).format(Number(n)||0)}
+function money(n,c){try{return new Intl.NumberFormat(undefined,{style:"currency",currency:c,maximumFractionDigits:["IDR","JPY","CLP","VND","KRW"].includes(c)?0:2}).format(Number(n)||0)}catch(e){return num(n)+" "+c}}
+function fill(id,sel){
+  const el=$(id);
+  if(!el)return;
+  el.innerHTML=Object.entries(currencies).map(([k,v])=>`<option value="${k}" ${k===sel?"selected":""}>${v[0]} ${v[1]} (${k})</option>`).join("");
+}
+["discCur","profitCur","marginCur","affCur"].forEach(id=>fill(id,"IDR")); fill("curFrom","USD");fill("curTo","IDR");
+function translate(){
+  document.documentElement.lang=$("lang").value;
+  document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=tr()[el.dataset.i18n]||el.textContent);
+  calcAll();
+}
+function syncAdvancedButtons(){
+  document.querySelectorAll("[data-advanced]").forEach(b=>{
+    const box=$(b.dataset.advanced);
+    b.textContent=box && box.classList.contains("show") ? (tr().hideAdvanced||"Hide detail") : (tr().advanced||"Detail");
+  });
+}
+function calcDiscount(){let c=$("discCur").value,a=parseNumber($("discPrice").value),p=parseNumber($("discPct").value),save=a*p/100,final=a-save;$("discMain").textContent=money(final,c);$("discSub").textContent=tpl(tr().save,{saved:money(save,c),final:money(final,c),pct:num(p)});$("discChip1").textContent=tr().navDiscount+": "+num(p)+"%";$("discChip2").textContent=label("original")+money(a,c);$("discAdv1").textContent=label("saved")+money(save,c);$("discAdv2").textContent=label("pay")+money(final,c);$("discExplain").textContent=$("discSub").textContent;
+$("discSmart").textContent=tr().discSmart}
+function calcProfit(){let cur=$("profitCur").value,cost=parseNumber($("profitCost").value),sell=parseNumber($("profitSell").value),q=parseNumber($("profitQty").value),profit=(sell-cost)*q,totalCost=cost*q,rev=sell*q,roi=totalCost?profit/totalCost*100:0,margin=rev?profit/rev*100:0;$("profitMain").textContent=money(profit,cur);$("profitSub").textContent=tpl(profit>=0?tr().profit:tr().loss,{profit:money(profit,cur)});$("profitChip1").textContent=label("revenue")+money(rev,cur);$("profitChip2").textContent=label("qty")+num(q);$("profitAdv1").textContent="ROI "+num(roi)+"%";$("profitAdv2").textContent="Margin "+num(margin)+"%";$("profitAdv3").textContent=label("totalCost")+money(totalCost,cur);$("profitExplain").textContent=tpl(tr().profitExplain,{cost:money(totalCost,cur),revenue:money(rev,cur),profit:money(profit,cur)});
+$("profitSmart").textContent=profit>=0?tr().profitSmartPos:tr().profitSmartNeg}
+function calcMargin(){let cur=$("marginCur").value,cost=parseNumber($("marginCost").value),sell=parseNumber($("marginSell").value),profit=sell-cost,margin=sell?profit/sell*100:0,markup=cost?profit/cost*100:0;$("marginMain").textContent=num(margin)+"%";$("marginSub").textContent=tpl(tr().marginExplain,{profit:money(profit,cur),markup:num(markup),margin:num(margin)});$("marginChip1").textContent=label("profit")+money(profit,cur);$("marginChip2").textContent=label("sell")+money(sell,cur);$("marginAdv1").textContent="Markup "+num(markup)+"%";$("marginAdv2").textContent=label("cost")+money(cost,cur);$("marginExplain").textContent=$("marginSub").textContent;
+$("marginSmart").textContent=tr().marginSmart}
+function calcCurrency(){
+  let a=parseNumber($("curAmount").value),f=$("curFrom").value,to=$("curTo").value;
+  const hasFrom=Number.isFinite(Number(rates[f])) && Number(rates[f])>0;
+  const hasTo=Number.isFinite(Number(rates[to])) && Number(rates[to])>0;
+  if(!hasFrom || !hasTo){
+    $("curMain").textContent=tr().rateUnavailable || "Rate not available";
+    $("curSub").textContent={
+      id:"Coba refresh kurs atau pilih mata uang lain.",
+      pt:"Tente atualizar as cotações ou escolha outra moeda.",
+      es:"Intenta actualizar los tipos o elige otra moneda."
+    }[document.documentElement.lang] || "Try refreshing rates or choose another currency.";
+    $("curChip1").textContent=updated;
+    $("curChip2").textContent=tr().rateNote || "Estimate";
+    $("curExplain").textContent=$("curSub").textContent;
+    if($("curSmart")) $("curSmart").textContent=tr().noRateSmart;
+    return;
+  }
+  let res=a/rates[f]*rates[to],rate=rates[to]/rates[f];
+  $("curMain").textContent=num(a)+" "+f+" = "+money(res,to);
+  $("curSub").textContent="1 "+f+" = "+num(rate)+" "+to;
+  $("curChip1").textContent=updated;
+  $("curChip2").textContent=tr().rateNote||"Estimate";
+  $("curExplain").textContent=tpl(tr().currencyExplain,{amount:num(a),from:f,result:num(res),to});
+  if($("curSmart")) $("curSmart").textContent=tr().currencySmart;
+}
+function calcAffiliate(){let cur=$("affCur").value,price=parseNumber($("affPrice").value),pct=parseNumber($("affPct").value),sales=parseNumber($("affSales").value),per=price*pct/100,total=per*sales;$("affMain").textContent=money(total,cur);$("affSub").textContent=tpl(tr().affiliateExplain,{perSale:money(per,cur),total:money(total,cur),sales:num(sales)});$("affChip1").textContent=label("perSale")+money(per,cur);$("affChip2").textContent=label("sales")+num(sales);$("affAdv1").textContent=label("product")+money(price,cur);$("affAdv2").textContent=label("commission")+num(pct)+"%";$("affExplain").textContent=$("affSub").textContent;
+$("affSmart").textContent=tr().affiliateSmart}
+function calcAll(){calcDiscount();calcProfit();calcMargin();calcCurrency();calcAffiliate()}
+async function loadRates(){$("status").innerHTML='<span class="pill">Loading...</span>';try{let saved=localStorage.getItem("mt_rates_final");if(saved)rates={...rates,...JSON.parse(saved)}}catch(e){}try{let r=await fetch("https://open.er-api.com/v6/latest/USD"),d=await r.json();if(d&&d.rates){Object.keys(rates).forEach(k=>{if(d.rates[k])rates[k]=d.rates[k]});localStorage.setItem("mt_rates_final",JSON.stringify(rates));updated=tr().updated+": "+new Date().toLocaleTimeString();$("status").innerHTML='<span class="pill ok">'+tr().live+'</span>'}else throw 0}catch(e){updated=tr().updated+": fallback";$("status").innerHTML='<span class="pill warn">'+tr().fallback+'</span>'}calcAll()}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab,.panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(b.dataset.panel).classList.add("active")});
+document.querySelectorAll("input").forEach(i=>i.addEventListener("input",calcAll));
+document.querySelectorAll("select").forEach(s=>s.addEventListener("change",translate));
+document.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>navigator.clipboard?.writeText($(b.dataset.copy).textContent));
+document.querySelectorAll("[data-advanced]").forEach(b=>b.onclick=()=>{
+  const box=$(b.dataset.advanced);
+  box.classList.toggle("show");
+  b.textContent=box.classList.contains("show") ? (tr().hideAdvanced||"Hide detail") : (tr().advanced||"Detail");
+});
+document.querySelectorAll("[data-reset]").forEach(b=>b.onclick=()=>{let x=b.dataset.reset;if(x==="discount"){$("discPrice").value="100000";$("discPct").value="30"}if(x==="profit"){$("profitCost").value="10000";$("profitSell").value="15000";$("profitQty").value="1"}if(x==="margin"){$("marginCost").value="100000";$("marginSell").value="150000"}if(x==="affiliate"){$("affPrice").value="100";$("affPct").value="20";$("affSales").value="15"}calcAll()});
+$("swapCurrency").onclick=()=>{let x=$("curFrom").value;$("curFrom").value=$("curTo").value;$("curTo").value=x;calcAll()};
+$("refresh").onclick=loadRates;$("lang").onchange=translate;translate();loadRates();
+</script>
+</body>
+</html>
